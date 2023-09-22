@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <select name="" id="" v-model="gender">
+            <option value="" disabled>請選擇</option>
+            <option value="male">male</option>
+            <option value="female">female</option>
+        </select>
+        {{gender}}
+
+        <div class="row">
+            <div class="col-3 mb-3" v-for="item in filterGender">
+                <div class="card">
+                    <img class="card-ing-top" :src="item.picture.large" alt="">
+                    <div class="card-body">
+                        <h5 class="card-title">E-mail : {{item.email}}</h5>
+                        <h5 class="card-title">Gender : {{item.gender}}</h5>
+                        <p class="card-text">
+                            City : {{item.location.city}}
+                        </p>
+                        <a href="" class="btn btn-primary">Go something</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        const vm = Vue.createApp({
+            data() {
+                return {
+                    data: [],
+                    gender: ''
+                }
+            },
+            methods: {
+                getData() {
+                    axios.get('https://randomuser.me/api/?results=10')
+                        .then((response) => {
+                            console.log(response);
+                            this.data = response.data.results;
+                        })
+                },
+            },
+            computed: {
+                // computed:不會改動到原始值，而是產生「新值」，主要作為渲染至畫面上使用
+                filterGender() {
+
+                    const newData = this.data.filter((item) => {
+                        return item.gender === this.gender
+                    })
+                    if (this.gender === '') {
+                        return this.data
+                    }
+                    return newData
+                },
+            },
+            mounted() {
+                this.getData()
+            }
+        })
+        vm.mount('#app');
+    </script>
+</body>
+
+</html>
